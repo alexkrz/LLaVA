@@ -32,7 +32,7 @@ class LlavaMptModel(LlavaMetaModel, MptModel):
     def __init__(self, config: MptConfig):
         config.hidden_size = config.d_model
         super(LlavaMptModel, self).__init__(config)
-    
+
     def embed_tokens(self, x):
         return self.wte(x)
 
@@ -68,10 +68,11 @@ class LlavaMptForCausalLM(MptForCausalLM, LlavaMetaForCausalLM):
         output_attentions: Optional[bool] = None,
         output_hidden_states: Optional[bool] = None,
         return_dict: Optional[bool] = None,
-        images=None):
+        images=None,
+        cache_position: Optional[torch.LongTensor] = None):
 
         input_ids, attention_mask, past_key_values, inputs_embeds, labels = self.prepare_inputs_labels_for_multimodal(input_ids, attention_mask, past_key_values, labels, images)
-        
+
         return super().forward(
             input_ids,
             past_key_values=past_key_values,
@@ -82,6 +83,7 @@ class LlavaMptForCausalLM(MptForCausalLM, LlavaMetaForCausalLM):
             output_attentions=output_attentions,
             output_hidden_states=output_hidden_states,
             return_dict=return_dict,
+            cache_position=cache_position,
         )
 
     def prepare_inputs_for_generation(self, input_ids, past_key_values=None, inputs_embeds=None, **kwargs):

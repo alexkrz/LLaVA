@@ -30,9 +30,10 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
         kwargs['device_map'] = {"": device}
 
     if load_8bit:
-        kwargs['load_in_8bit'] = True
+        kwargs['quantization_config'] = BitsAndBytesConfig(
+            load_in_8bit=True
+        )
     elif load_4bit:
-        kwargs['load_in_4bit'] = True
         kwargs['quantization_config'] = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_compute_dtype=torch.float16,
@@ -155,8 +156,10 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
         vision_tower = model.get_vision_tower()
         if not vision_tower.is_loaded:
             vision_tower.load_model(device_map=device_map)
+        # Always ensure vision tower is in fp16 to save memory
+        vision_tower.to(dtype=torch.float16)
         if device_map != 'auto':
-            vision_tower.to(device=device_map, dtype=torch.float16)
+            vision_tower.to(device=device_map)
         image_processor = vision_tower.image_processor
 
     if hasattr(model.config, "max_sequence_length"):

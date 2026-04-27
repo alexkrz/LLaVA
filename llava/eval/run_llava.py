@@ -20,7 +20,6 @@ from llava.mm_utils import (
 from PIL import Image
 
 import requests
-from PIL import Image
 from io import BytesIO
 import re
 
@@ -116,7 +115,7 @@ def eval_model(args):
             input_ids,
             images=images_tensor,
             image_sizes=image_sizes,
-            do_sample=True if args.temperature > 0 else False,
+            do_sample=True if args.temperature > 0.0 else False,
             temperature=args.temperature,
             top_p=args.top_p,
             num_beams=args.num_beams,

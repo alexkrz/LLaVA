@@ -2,15 +2,11 @@ from llava.eval.run_llava import eval_model
 from llava.mm_utils import get_model_name_from_path
 from llava.model.builder import load_pretrained_model
 
+
 model_path = "liuhaotian/llava-v1.5-7b"
-
-tokenizer, model, image_processor, context_len = load_pretrained_model(
-    model_path=model_path, model_base=None, model_name=get_model_name_from_path(model_path)
-)
-
-
-prompt = "What are the things I should be cautious about when I visit here?"
 image_file = "https://llava-vl.github.io/static/images/view.jpg"
+prompt = "What are the things I should be cautious about when I visit here?"
+
 
 args = type(
     "Args",
@@ -23,7 +19,7 @@ args = type(
         "conv_mode": None,
         "image_file": image_file,
         "sep": ",",
-        "temperature": 0,
+        "temperature": 0.0,
         "top_p": None,
         "num_beams": 1,
         "max_new_tokens": 512,
